@@ -3,9 +3,8 @@ import os.path
 import sys
 import re
 import getopt
-from glob import glob
 from pprint import pprint
-from vella.workinstruction import Workinstruction, WiShell
+from vella.wishell import WiShell
 
 Location = "/home/vella/work_instructions"
 
@@ -40,20 +39,7 @@ def main(argv):
     if not os.path.isdir(location):
         raise DirNotExists(location)
 
-    wis = {}
-    for name in glob("%s/*" % location):
-        if not os.path.isdir(name):
-            continue
-
-        i = re.search(r'/(.*)$', name)
-        if not i:
-            print("Could not match instruction name in '%s', skipping" % name)
-            continue
-
-        wi = Workinstruction(i.group(1), name)
-        wis[wi.getName()] = wi
-
-    wshell = WiShell(wis, "vella-work-instruct>")
+    wshell = WiShell(location, "vella-work-instruct>")
     wshell.run()
 
 if __name__ == "__main__":
